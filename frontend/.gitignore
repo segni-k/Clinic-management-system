@@ -1,0 +1,79 @@
+# Dependencies
+/node_modules/
+
+# Build output
+/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing / tooling
+/coverage/
+.eslintcache
+
+# IDE / OS files
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+
+
+
+
+
+
+
+# Node
+node_modules
+.pnpm-store
+.npm
+
+# Build outputs
+/dist
+/build
+.next
+.out
+.vite
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage
+
+# Cache
+.cache
+.eslintcache
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS
+.DS_Store
+Thumbs.db
