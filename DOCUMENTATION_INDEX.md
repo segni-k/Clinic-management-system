@@ -35,6 +35,7 @@ Welcome to the **Clinic Management System** documentation. This project is a com
 | **[API_RESOURCES_AND_AUTH_AUDIT.md](API_RESOURCES_AND_AUTH_AUDIT.md)** | API Resources & Sanctum Auth verification | Backend/Frontend developers |
 | **[RBAC_AUDIT.md](RBAC_AUDIT.md)** | Role-Based Access Control verification | Backend developers, Security |
 | **[FILAMENT_AUDIT.md](FILAMENT_AUDIT.md)** | Filament v4 Admin Panel - Resources, Widgets, Calendar | Backend developers, UI/UX |
+| **[FRONTEND_GUIDE.md](FRONTEND_GUIDE.md)** | Frontend implementation - Components, Pages, API | Frontend developers, UI/UX |
 | **[CHANGELOG.md](CHANGELOG.md)** | Complete change log of all implementations | Project managers |
 
 ### Setup & Deployment
@@ -79,12 +80,15 @@ Welcome to the **Clinic Management System** documentation. This project is a com
 ### 👨‍💻 Frontend Developer
 **Working on React frontend?**
 
-1. [API_DOCUMENTATION.md](API_DOCUMENTATION.md) - Complete API reference
-2. [API_RESOURCES_AND_AUTH_AUDIT.md](API_RESOURCES_AND_AUTH_AUDIT.md) - Authentication & response formats
-3. [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Frontend commands
-3. Code locations:
-   - API services: `frontend/src/api/services.ts`
+1. [FRONTEND_GUIDE.md](FRONTEND_GUIDE.md) - Complete frontend implementation guide
+2. [frontend/README.md](frontend/README.md) - Frontend-specific setup and documentation
+3. [API_DOCUMENTATION.md](API_DOCUMENTATION.md) - Complete API reference
+4. [API_RESOURCES_AND_AUTH_AUDIT.md](API_RESOURCES_AND_AUTH_AUDIT.md) - Authentication & response formats
+5. [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Frontend commands
+6. Code locations:
+   - Components: `frontend/src/components/`
    - Pages: `frontend/src/pages/`
+   - API services: `frontend/src/api/services.ts`
    - Auth: `frontend/src/context/AuthContext.tsx`
 
 ### 🏗️ System Architect
