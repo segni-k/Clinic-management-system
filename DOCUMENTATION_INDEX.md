@@ -34,6 +34,7 @@ Welcome to the **Clinic Management System** documentation. This project is a com
 | **[VALIDATION_AND_BUSINESS_LOGIC_AUDIT.md](VALIDATION_AND_BUSINESS_LOGIC_AUDIT.md)** | Validation & Services verification | Backend developers |
 | **[API_RESOURCES_AND_AUTH_AUDIT.md](API_RESOURCES_AND_AUTH_AUDIT.md)** | API Resources & Sanctum Auth verification | Backend/Frontend developers |
 | **[RBAC_AUDIT.md](RBAC_AUDIT.md)** | Role-Based Access Control verification | Backend developers, Security |
+| **[FILAMENT_AUDIT.md](FILAMENT_AUDIT.md)** | Filament v4 Admin Panel - Resources, Widgets, Calendar | Backend developers, UI/UX |
 | **[CHANGELOG.md](CHANGELOG.md)** | Complete change log of all implementations | Project managers |
 
 ### Setup & Deployment
@@ -65,12 +66,15 @@ Welcome to the **Clinic Management System** documentation. This project is a com
 5. [VALIDATION_AND_BUSINESS_LOGIC_AUDIT.md](VALIDATION_AND_BUSINESS_LOGIC_AUDIT.md) - Business logic patterns
 6. [API_RESOURCES_AND_AUTH_AUDIT.md](API_RESOURCES_AND_AUTH_AUDIT.md) - API Resources & Auth implementation
 7. [RBAC_AUDIT.md](RBAC_AUDIT.md) - Role-based permissions reference
-8. Code locations:
+8. [FILAMENT_AUDIT.md](FILAMENT_AUDIT.md) - Filament v4 admin panel implementation
+9. Code locations:
    - Services: `backend/app/Services/`
    - Repositories: `backend/app/Repositories/`
    - Controllers: `backend/app/Http/Controllers/Api/`
    - Models: `backend/app/Models/`
    - Migrations: `backend/database/migrations/`
+   - Filament Resources: `backend/app/Filament/Resources/`
+   - Filament Widgets: `backend/app/Filament/Widgets/`
 
 ### 👨‍💻 Frontend Developer
 **Working on React frontend?**

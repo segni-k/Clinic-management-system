@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AppointmentResource\Pages;
 
 use App\Filament\Resources\AppointmentResource;
 use App\Models\Appointment;
+use Filament\Actions;
 use Filament\Resources\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -18,6 +19,17 @@ class CalendarAppointments extends Page
     public function getTitle(): string | Htmlable
     {
         return 'Appointment Calendar';
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\Action::make('list')
+                ->label('List View')
+                ->icon('heroicon-o-list-bullet')
+                ->url(fn (): string => static::getResource()::getUrl('index'))
+                ->color('gray'),
+        ];
     }
 
     public function getViewData(): array
