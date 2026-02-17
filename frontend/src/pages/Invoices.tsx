@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { invoicesApi } from '../api/services';
-import Card, { CardBody } from '../components/Card';
+import { DataTable } from '../components/DataTable';
+import { StatusBadge } from '../components/StatusBadge';
 import Button from '../components/Button';
-import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/Table';
-import Badge from '../components/Badge';
 import { Icons } from '../components/Icons';
 
 interface Invoice {
+  [key: string]: unknown;
   id: number;
   patient?: { full_name?: string };
   total?: number;
@@ -42,20 +42,9 @@ export default function Invoices() {
       await invoicesApi.pay(id, 'cash');
       loadInvoices();
     } catch {
-      // Error already shown by axios interceptor or could add toast
+      alert('Failed to mark invoice as paid');
     } finally {
       setPaying(null);
-    }
-  };
-
-  const getStatusVariant = (status?: string) => {
-    switch (status) {
-      case 'paid':
-        return 'success';
-      case 'overdue':
-        return 'danger';
-      default:
-        return 'warning';
     }
   };
 
@@ -67,84 +56,78 @@ export default function Invoices() {
         <p className="mt-1 text-sm text-gray-600">Manage patient invoices and payments</p>
       </div>
 
-      {/* Table */}
-      <Card>
-        <CardBody className="p-0">
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading invoices...</p>
-              </div>
-            </div>
-          ) : invoices.length === 0 ? (
-            <div className="text-center py-12">
-              <Icons.Document />
-              <p className="mt-4 text-lg font-medium text-gray-900">No invoices found</p>
-              <p className="mt-2 text-sm text-gray-600">Invoice records will appear here</p>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <tr>
-                  <TableHead>Patient</TableHead>
-                  <TableHead>Issue Date</TableHead>
-                  <TableHead>Due Date</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </tr>
-              </TableHeader>
-              <TableBody>
-                {invoices.map((invoice) => (
-                  <TableRow key={invoice.id}>
-                    <TableCell className="font-medium">{invoice.patient?.full_name || '-'}</TableCell>
-                    <TableCell>
-                      {invoice.issue_date
-                        ? new Date(invoice.issue_date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })
-                        : '-'}
-                    </TableCell>
-                    <TableCell>
-                      {invoice.due_date
-                        ? new Date(invoice.due_date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })
-                        : '-'}
-                    </TableCell>
-                    <TableCell className="font-semibold">
-                      ETB {invoice.total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={getStatusVariant(invoice.payment_status)}>
-                        {invoice.payment_status || 'pending'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {invoice.payment_status === 'unpaid' && (
-                        <Button
-                          size="sm"
-                          onClick={() => handlePay(invoice.id)}
-                          loading={paying === invoice.id}
-                          variant="success"
-                        >
-                          <Icons.Check />
-                          <span className="ml-1">Mark Paid</span>
-                        </Button>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardBody>
-      </Card>
+      {/* Invoices Table */}
+      <DataTable<Invoice>
+        data={invoices}
+        loading={loading}
+        searchable
+        searchPlaceholder="Search invoices..."
+        emptyMessage="No invoices found"
+        columns={[
+          {
+            key: 'patient',
+            label: 'Patient',
+            sortable: true,
+            render: (inv) => inv.patient?.full_name || '-',
+          },
+          {
+            key: 'issue_date',
+            label: 'Issue Date',
+            sortable: true,
+            render: (inv) =>
+              inv.issue_date
+                ? new Date(inv.issue_date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                : '-',
+          },
+          {
+            key: 'due_date',
+            label: 'Due Date',
+            sortable: true,
+            render: (inv) =>
+              inv.due_date
+                ? new Date(inv.due_date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                : '-',
+          },
+          {
+            key: 'total',
+            label: 'Amount',
+            sortable: true,
+            render: (inv) =>
+              `ETB ${inv.total?.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }) || '0.00'}`,
+          },
+          {
+            key: 'payment_status',
+            label: 'Status',
+            render: (inv) => <StatusBadge status={inv.payment_status || 'pending'} type="invoice" />,
+          },
+        ]}
+        actions={(inv) => (
+          <>
+            {inv.payment_status === 'unpaid' && (
+              <Button
+                size="sm"
+                onClick={() => handlePay(inv.id)}
+                loading={paying === inv.id}
+                variant="success"
+              >
+                <Icons.Check />
+                <span className="ml-1">Mark Paid</span>
+              </Button>
+            )}
+          </>
+        )}
+      />
     </div>
   );
 }

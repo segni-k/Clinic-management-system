@@ -3,7 +3,8 @@ import { appointmentsApi, invoicesApi, patientsApi } from '../api/services';
 import StatCard from '../components/StatCard';
 import Card, { CardHeader, CardBody } from '../components/Card';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/Table';
-import Badge from '../components/Badge';
+import { StatusBadge } from '../components/StatusBadge';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Icons } from '../components/Icons';
 
 interface Appointment {
@@ -47,28 +48,8 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  const getStatusVariant = (status?: string) => {
-    switch (status) {
-      case 'completed':
-        return 'success';
-      case 'cancelled':
-        return 'danger';
-      case 'no_show':
-        return 'warning';
-      default:
-        return 'info';
-    }
-  };
-
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return (<LoadingSpinner fullScreen text="Loading dashboard..." />);
   }
 
   return (
@@ -134,9 +115,7 @@ export default function Dashboard() {
                     <TableCell>{appointment.doctor?.name || '-'}</TableCell>
                     <TableCell>{appointment.timeslot || '-'}</TableCell>
                     <TableCell>
-                      <Badge variant={getStatusVariant(appointment.status)}>
-                        {appointment.status || 'scheduled'}
-                      </Badge>
+                      <StatusBadge status={appointment.status || 'scheduled'} type="appointment" />
                     </TableCell>
                   </TableRow>
                 ))}

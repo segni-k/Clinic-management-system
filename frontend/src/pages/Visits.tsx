@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { visitsApi } from '../api/services';
-import Card, { CardBody } from '../components/Card';
-import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/Table';
+import { useAuth } from '../context/AuthContext';
+import { DataTable } from '../components/DataTable';
+import Button from '../components/Button';
 import { Icons } from '../components/Icons';
 
 interface Visit {
+  [key: string]: unknown;
   id: number;
   patient?: { full_name?: string };
   doctor?: { name?: string };
@@ -14,8 +17,12 @@ interface Visit {
 }
 
 export default function Visits() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const isDoctor = user?.role?.slug === 'doctor';
 
   useEffect(() => {
     visitsApi
@@ -31,63 +38,58 @@ export default function Visits() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Clinical Visits</h1>
-        <p className="mt-1 text-sm text-gray-600">Patient visit records and medical consultations</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Clinical Visits</h1>
+          <p className="mt-1 text-sm text-gray-600">Patient visit records and medical consultations</p>
+        </div>
+        {isDoctor && (
+          <Button onClick={() => navigate('/visits/new')} className="w-full sm:w-auto">
+            <Icons.Plus />
+            <span className="ml-2">New Visit</span>
+          </Button>
+        )}
       </div>
 
-      {/* Table */}
-      <Card>
-        <CardBody className="p-0">
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading visits...</p>
-              </div>
-            </div>
-          ) : visits.length === 0 ? (
-            <div className="text-center py-12">
-              <Icons.Clipboard />
-              <p className="mt-4 text-lg font-medium text-gray-900">No visits recorded</p>
-              <p className="mt-2 text-sm text-gray-600">Visit records will appear here</p>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <tr>
-                  <TableHead>Patient</TableHead>
-                  <TableHead>Doctor</TableHead>
-                  <TableHead>Visit Date</TableHead>
-                  <TableHead>Symptoms</TableHead>
-                  <TableHead>Diagnosis</TableHead>
-                </tr>
-              </TableHeader>
-              <TableBody>
-                {visits.map((visit) => (
-                  <TableRow key={visit.id}>
-                    <TableCell className="font-medium">{visit.patient?.full_name || '-'}</TableCell>
-                    <TableCell>{visit.doctor?.name || '-'}</TableCell>
-                    <TableCell>
-                      {visit.visit_date
-                        ? new Date(visit.visit_date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })
-                        : '-'}
-                    </TableCell>
-                    <TableCell className="max-w-xs truncate">{visit.symptoms || '-'}</TableCell>
-                    <TableCell className="max-w-xs truncate">{visit.diagnosis || '-'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardBody>
-      </Card>
+      {/* Visits Table */}
+      <DataTable<Visit>
+        data={visits}
+        loading={loading}
+        searchable
+        searchPlaceholder="Search visits..."
+        emptyMessage="No clinical visits recorded"
+        columns={[
+          {
+            key: 'patient',
+            label: 'Patient',
+            sortable: true,
+            render: (v) => v.patient?.full_name || '-',
+          },
+          {
+            key: 'doctor',
+            label: 'Doctor',
+            sortable: true,
+            render: (v) => v.doctor?.name || '-',
+          },
+          {
+            key: 'visit_date',
+            label: 'Visit Date',
+            sortable: true,
+            render: (v) =>
+              v.visit_date
+                ? new Date(v.visit_date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })
+                : '-',
+          },
+          { key: 'symptoms', label: 'Symptoms' },
+          { key: 'diagnosis', label: 'Diagnosis' },
+        ]}
+      />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import PatientProfile from './pages/PatientProfile';
 import PatientForm from './pages/PatientForm';
 import Appointments from './pages/Appointments';
 import Visits from './pages/Visits';
+import VisitForm from './pages/VisitForm';
 import Invoices from './pages/Invoices';
 import './index.css';
 
@@ -32,6 +33,7 @@ function App() {
             <Route path="patients/:id" element={<PatientProfile />} />
             <Route path="appointments" element={<Appointments />} />
             <Route path="visits" element={<Visits />} />
+            <Route path="visits/new" element={<VisitForm />} />
             <Route path="invoices" element={<Invoices />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
