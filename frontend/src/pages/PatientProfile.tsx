@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { patientsApi, prescriptionsApi, invoicesApi } from '../api/services';
+import { useToast } from '../context/ToastContext';
 import Card, { CardHeader, CardBody } from '../components/Card';
 import { DataTable } from '../components/DataTable';
 import { StatusBadge } from '../components/StatusBadge';
@@ -35,6 +36,7 @@ interface Invoice {
 export default function PatientProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { success, error: showError } = useToast();
   const [patient, setPatient] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<'visits' | 'prescriptions' | 'invoices'>('visits');
@@ -177,6 +179,31 @@ export default function PatientProfile() {
                 render: (p) => <StatusBadge status={p.status || 'active'} type="prescription" />,
               },
             ]}
+            actions={(prescription) => (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={async () => {
+                  try {
+                    const response = await prescriptionsApi.downloadPdf(prescription.id);
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `prescription-${prescription.id}.pdf`);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.URL.revokeObjectURL(url);
+                    success('Prescription downloaded successfully!');
+                  } catch {
+                    showError('Failed to download prescription');
+                  }
+                }}
+              >
+                <Icons.Download />
+                <span className="ml-1">Print</span>
+              </Button>
+            )}
           />
         </Card>
       )}

@@ -69,4 +69,14 @@ class PrescriptionController extends Controller
         $prescription->delete();
         return response()->json(null, 204);
     }
+
+    public function generatePdf(Prescription $prescription)
+    {
+        $this->authorize('view', $prescription);
+        
+        $prescription->load(['patient', 'visit.doctor', 'items']);
+        
+        // Return HTML view that can be printed or converted to PDF by browser
+        return view('prescriptions.pdf', compact('prescription'));
+    }
 }

@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -23,22 +24,24 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-            <Route index element={<Dashboard />} />
-            <Route path="patients" element={<Patients />} />
-            <Route path="patients/new" element={<PatientForm />} />
-            <Route path="patients/:id" element={<PatientProfile />} />
-            <Route path="appointments" element={<Appointments />} />
-            <Route path="visits" element={<Visits />} />
-            <Route path="visits/new" element={<VisitForm />} />
-            <Route path="invoices" element={<Invoices />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+              <Route index element={<Dashboard />} />
+              <Route path="patients" element={<Patients />} />
+              <Route path="patients/new" element={<PatientForm />} />
+              <Route path="patients/:id" element={<PatientProfile />} />
+              <Route path="appointments" element={<Appointments />} />
+              <Route path="visits" element={<Visits />} />
+              <Route path="visits/new" element={<VisitForm />} />
+              <Route path="invoices" element={<Invoices />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </ToastProvider>
     </AuthProvider>
   );
 }

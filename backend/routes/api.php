@@ -43,8 +43,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Prescriptions
     Route::apiResource('prescriptions', PrescriptionController::class);
+    Route::get('/prescriptions/{prescription}/pdf', [PrescriptionController::class, 'generatePdf']);
 
     // Invoices
     Route::apiResource('invoices', InvoiceController::class);
     Route::patch('/invoices/{invoice}/pay', [InvoiceController::class, 'pay']);
+    Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'generatePdf']);
 });

@@ -57,4 +57,14 @@ class InvoiceController extends Controller
         $invoice->delete();
         return response()->json(null, 204);
     }
+
+    public function generatePdf(Invoice $invoice)
+    {
+        $this->authorize('view', $invoice);
+        
+        $invoice->load(['patient', 'visit', 'items']);
+        
+        // Return HTML view that can be printed or converted to PDF by browser
+        return view('invoices.pdf', compact('invoice'));
+    }
 }

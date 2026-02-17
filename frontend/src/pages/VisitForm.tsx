@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { visitsApi, patientsApi, prescriptionsApi, invoicesApi } from '../api/services';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import Card, { CardBody, CardHeader } from '../components/Card';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -17,6 +18,7 @@ interface Patient {
 export default function VisitForm() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { success, error: showError } = useToast();
   const [searchParams] = useSearchParams();
   const appointmentId = searchParams.get('appointment_id');
 
@@ -112,14 +114,16 @@ export default function VisitForm() {
         }
       }
 
+      success('Visit created successfully!');
       navigate('/visits');
     } catch (err: unknown) {
       const data = (err as { response?: { data?: { message?: string; errors?: Record<string, string[]> } } })
         ?.response?.data;
-      setError(
+      const errorMessage =
         data?.message ??
-          (data?.errors ? Object.values(data.errors).flat().join(', ') : 'Failed to create visit')
-      );
+          (data?.errors ? Object.values(data.errors).flat().join(', ') : 'Failed to create visit');
+      setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setSaving(false);
     }

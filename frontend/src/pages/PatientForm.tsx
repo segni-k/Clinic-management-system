@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { patientsApi } from '../api/services';
+import { useToast } from '../context/ToastContext';
 import Card, { CardHeader, CardBody } from '../components/Card';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -8,6 +9,7 @@ import { Icons } from '../components/Icons';
 
 export default function PatientForm() {
   const navigate = useNavigate();
+  const { success, error: showError } = useToast();
   const [form, setForm] = useState({
     first_name: '',
     last_name: '',
@@ -26,10 +28,13 @@ export default function PatientForm() {
     setLoading(true);
     try {
       await patientsApi.create(form);
+      success('Patient registered successfully!');
       navigate('/patients');
     } catch (err: unknown) {
       const data = (err as { response?: { data?: { message?: string; errors?: Record<string, string[]> } } })?.response?.data;
-      setError(data?.message ?? (data?.errors ? Object.values(data.errors).flat().join(', ') : 'Failed to create patient'));
+      const errorMessage = data?.message ?? (data?.errors ? Object.values(data.errors).flat().join(', ') : 'Failed to create patient');
+      setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }

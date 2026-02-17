@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { appointmentsApi, doctorsApi, patientsApi, visitsApi } from '../api/services';
+import { useToast } from '../context/ToastContext';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { DataTable } from '../components/DataTable';
@@ -31,6 +32,7 @@ interface Doctor {
 
 export default function Appointments() {
   const { user } = useAuth();
+  const { success, error: showError } = useToast();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -85,16 +87,18 @@ export default function Appointments() {
         patient_id: Number(form.patient_id),
         doctor_id: Number(form.doctor_id),
       });
+      success('Appointment created successfully!');
       setShowForm(false);
       setForm({ patient_id: '', doctor_id: '', appointment_date: '', timeslot: '09:00-10:00' });
       loadAppointments();
     } catch (err: unknown) {
       const data = (err as { response?: { data?: { message?: string; errors?: Record<string, string[]> } } })
         ?.response?.data;
-      setFormError(
+      const errorMessage =
         data?.message ??
-          (data?.errors ? Object.values(data.errors).flat().join(', ') : 'Failed to create appointment')
-      );
+          (data?.errors ? Object.values(data.errors).flat().join(', ') : 'Failed to create appointment');
+      setFormError(errorMessage);
+      showError(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -105,9 +109,10 @@ export default function Appointments() {
     try {
       await visitsApi.fromAppointment(appointmentId);
       await appointmentsApi.updateStatus(appointmentId, 'completed');
+      success('Appointment converted to visit successfully!');
       loadAppointments();
     } catch (err) {
-      alert('Failed to convert appointment to visit');
+      showError('Failed to convert appointment to visit');
     } finally {
       setConverting(null);
     }

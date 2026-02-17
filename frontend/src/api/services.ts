@@ -47,6 +47,7 @@ export const prescriptionsApi = {
   create: (data: Record<string, unknown>) => api.post('/prescriptions', data),
   update: (id: number, data: Record<string, unknown>) => api.put(`/prescriptions/${id}`, data),
   delete: (id: number) => api.delete(`/prescriptions/${id}`),
+  downloadPdf: (id: number) => api.get(`/prescriptions/${id}/pdf`, { responseType: 'blob' }),
 };
 
 export const invoicesApi = {
@@ -55,4 +56,5 @@ export const invoicesApi = {
   create: (data: Record<string, unknown>) => api.post('/invoices', data),
   pay: (id: number, payment_method: string) => api.patch(`/invoices/${id}/pay`, { payment_method }),
   delete: (id: number) => api.delete(`/invoices/${id}`),
+  downloadPdf: (id: number) => api.get(`/invoices/${id}/pdf`, { responseType: 'blob' }),
 };

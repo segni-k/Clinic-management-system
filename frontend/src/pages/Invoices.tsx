@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { invoicesApi } from '../api/services';
+import { useToast } from '../context/ToastContext';
 import { DataTable } from '../components/DataTable';
 import { StatusBadge } from '../components/StatusBadge';
 import Button from '../components/Button';
@@ -16,6 +17,7 @@ interface Invoice {
 }
 
 export default function Invoices() {
+  const { success, error: showError } = useToast();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState<number | null>(null);
@@ -40,11 +42,29 @@ export default function Invoices() {
     setPaying(id);
     try {
       await invoicesApi.pay(id, 'cash');
+      success('Invoice marked as paid successfully!');
       loadInvoices();
     } catch {
-      alert('Failed to mark invoice as paid');
+      showError('Failed to mark invoice as paid');
     } finally {
       setPaying(null);
+    }
+  };
+
+  const handleDownloadPdf = async (id: number) => {
+    try {
+      const response = await invoicesApi.downloadPdf(id);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `invoice-${id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      success('Invoice PDF downloaded successfully!');
+    } catch {
+      showError('Failed to download invoice PDF');
     }
   };
 
@@ -114,6 +134,14 @@ export default function Invoices() {
         ]}
         actions={(inv) => (
           <>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleDownloadPdf(inv.id)}
+            >
+              <Icons.Download />
+              <span className="ml-1">PDF</span>
+            </Button>
             {inv.payment_status === 'unpaid' && (
               <Button
                 size="sm"
