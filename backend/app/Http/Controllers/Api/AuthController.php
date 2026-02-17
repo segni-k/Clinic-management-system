@@ -5,37 +5,46 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
+use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        protected AuthService $authService
+    ) {}
+
     public function login(LoginRequest $request): JsonResponse
     {
-        if (! Auth::attempt($request->validated())) {
+        try {
+            $result = $this->authService->login(
+                $request->validated('email'),
+                $request->validated('password')
+            );
+
+            return response()->json([
+                'user' => new UserResource($result['user']),
+                'token' => $result['token'],
+                'token_type' => $result['token_type'],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-
-        $user = Auth::user();
-        $user->tokens()->delete();
-        $token = $user->createToken('auth-token')->plainTextToken;
-
-        return response()->json([
-            'user' => new UserResource($user->load(['role', 'doctor'])),
-            'token' => $token,
-            'token_type' => 'Bearer',
-        ]);
     }
 
     public function logout(): JsonResponse
     {
-        Auth::user()?->currentAccessToken()->delete();
+        $user = $this->authService->getCurrentUser();
+        if ($user) {
+            $this->authService->logout($user);
+        }
 
         return response()->json(['message' => 'Logged out successfully']);
     }
 
     public function user(): JsonResponse
     {
-        return response()->json(new UserResource(Auth::user()->load(['role', 'doctor'])));
+        $user = $this->authService->getCurrentUser();
+        return response()->json(new UserResource($user));
     }
 }
