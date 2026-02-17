@@ -4,9 +4,13 @@ namespace App\Services;
 
 use App\Models\Appointment;
 use App\Models\Visit;
+use App\Repositories\VisitRepository;
 
 class VisitService
 {
+    public function __construct(
+        protected VisitRepository $repository
+    ) {}
     public function createFromAppointment(Appointment $appointment, ?int $createdBy = null): Visit
     {
         $appointment->update(['status' => Appointment::STATUS_COMPLETED]);

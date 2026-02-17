@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\PatientController;
+use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\VisitController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
 
     // Doctors
-    Route::get('/doctors', [DoctorController::class, 'index']);
+    Route::get('/doctors/search', [DoctorController::class, 'search']);
+    Route::apiResource('doctors', DoctorController::class);
 
     // Patients
     Route::get('/patients/search', [PatientController::class, 'search']);
@@ -38,6 +40,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Visits
     Route::post('/visits/from-appointment/{appointment}', [VisitController::class, 'fromAppointment']);
     Route::apiResource('visits', VisitController::class);
+
+    // Prescriptions
+    Route::apiResource('prescriptions', PrescriptionController::class);
 
     // Invoices
     Route::apiResource('invoices', InvoiceController::class);

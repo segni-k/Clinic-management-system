@@ -5,9 +5,13 @@ namespace App\Services;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Visit;
+use App\Repositories\InvoiceRepository;
 
 class InvoiceService
 {
+    public function __construct(
+        protected InvoiceRepository $repository
+    ) {}
     public function create(array $data, ?int $createdBy = null): Invoice
     {
         $visit = Visit::findOrFail($data['visit_id']);
