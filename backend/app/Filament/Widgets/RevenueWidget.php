@@ -9,13 +9,13 @@ use Flowframe\Trend\TrendValue;
 
 class RevenueWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Revenue Overview';
+    protected ?string $heading = 'Revenue Overview';
     
     protected static ?int $sort = 3;
     
     protected int | string | array $columnSpan = 'full';
 
-    protected static ?string $maxHeight = '300px';
+    protected ?string $maxHeight = '300px';
 
     public ?string $filter = 'month';
 

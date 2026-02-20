@@ -12,7 +12,7 @@ class CalendarAppointments extends Page
 {
     protected static string $resource = AppointmentResource::class;
 
-    protected static string $view = 'filament.resources.appointment-resource.pages.calendar-appointments';
+    protected string $view = 'filament.resources.appointment-resource.pages.calendar-appointments';
 
     protected static ?string $title = 'Appointment Calendar';
 

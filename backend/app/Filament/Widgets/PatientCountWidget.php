@@ -7,11 +7,11 @@ use Filament\Widgets\ChartWidget;
 
 class PatientCountWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Patient Registration Trend';
+    protected ?string $heading = 'Patient Registration Trend';
     
     protected static ?int $sort = 4;
 
-    protected static ?string $maxHeight = '250px';
+    protected ?string $maxHeight = '250px';
 
     protected function getData(): array
     {
