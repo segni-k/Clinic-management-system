@@ -37,7 +37,7 @@ const statusConfig: Record<StatusType, { variant: 'success' | 'warning' | 'dange
   dispensed: { variant: 'info', label: 'Dispensed' },
 };
 
-export const StatusBadge = ({ status, type = 'general' }: StatusBadgeProps) => {
+export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const normalizedStatus = status.toLowerCase() as StatusType;
   const config = statusConfig[normalizedStatus] || { variant: 'secondary' as const, label: status };
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { patientsApi, prescriptionsApi, invoicesApi } from '../api/services';
+import { patientsApi, prescriptionsApi } from '../api/services';
 import { useToast } from '../context/ToastContext';
 import Card, { CardHeader, CardBody } from '../components/Card';
 import { DataTable } from '../components/DataTable';

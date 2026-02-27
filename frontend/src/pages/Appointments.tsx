@@ -111,7 +111,7 @@ export default function Appointments() {
       await appointmentsApi.updateStatus(appointmentId, 'completed');
       success('Appointment converted to visit successfully!');
       loadAppointments();
-    } catch (err) {
+    } catch {
       showError('Failed to convert appointment to visit');
     } finally {
       setConverting(null);

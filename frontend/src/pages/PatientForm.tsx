@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { patientsApi } from '../api/services';
 import { useToast } from '../context/ToastContext';
-import Card, { CardHeader, CardBody } from '../components/Card';
+import Card, { CardBody } from '../components/Card';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { Icons } from '../components/Icons';

@@ -23,10 +23,10 @@ export function TableBody({ children }: { children: ReactNode }) {
   return <tbody className="bg-white divide-y divide-gray-200">{children}</tbody>;
 }
 
-export function TableRow({ children, onClick }: { children: ReactNode; onClick?: () => void }) {
+export function TableRow({ children, onClick, className = '' }: { children: ReactNode; onClick?: () => void; className?: string }) {
   return (
     <tr
-      className={onClick ? 'hover:bg-gray-50 cursor-pointer transition-colors' : ''}
+      className={`${onClick ? 'hover:bg-gray-50 cursor-pointer transition-colors' : ''} ${className}`.trim()}
       onClick={onClick}
     >
       {children}

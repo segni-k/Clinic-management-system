@@ -89,7 +89,7 @@ export default function Layout() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'User'}</p>
-                  <p className="text-xs text-gray-500 truncate capitalize">{user?.role || 'User'}</p>
+                  <p className="text-xs text-gray-500 truncate capitalize">{user?.role?.name || 'User'}</p>
                 </div>
               </div>
               <button

@@ -3,7 +3,6 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import Input from './Input';
 import { Icons } from './Icons';
 import { LoadingSpinner } from './LoadingSpinner';
-import Button from './Button';
 
 interface Column<T> {
   key: string;
@@ -23,7 +22,7 @@ interface DataTableProps<T> {
   actions?: (item: T) => ReactNode;
 }
 
-export function DataTable<T extends Record<string, unknown>>({
+export function DataTable<T extends object>({
   data,
   columns,
   loading = false,
@@ -51,7 +50,7 @@ export function DataTable<T extends Record<string, unknown>>({
     ? [...filteredData].sort((a, b) => {
         const aVal = a[sortColumn];
         const bVal = b[sortColumn];
-        
+
         if (aVal === bVal) return 0;
         const comparison = aVal > bVal ? 1 : -1;
         return sortDirection === 'asc' ? comparison : -comparison;
@@ -135,7 +134,7 @@ export function DataTable<T extends Record<string, unknown>>({
                     <TableCell key={column.key}>
                       {column.render
                         ? column.render(item)
-                        : String(item[column.key] ?? '-')}
+                        : String((item as Record<string, unknown>)[column.key] ?? '-')}
                     </TableCell>
                   ))}
                   {actions && (

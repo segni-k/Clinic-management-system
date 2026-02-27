@@ -1,9 +1,8 @@
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState, useEffect, useCallback } from 'react';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from './Table';
 import Input from './Input';
 import { Icons } from './Icons';
 import { LoadingSpinner } from './LoadingSpinner';
-import Button from './Button';
 import { Pagination } from './Pagination';
 
 interface Column<T> {
@@ -36,7 +35,7 @@ interface PaginatedDataTableProps<T> {
   defaultPerPage?: number;
 }
 
-export function PaginatedDataTable<T extends Record<string, unknown>>({
+export function PaginatedDataTable<T extends object>({
   fetchData,
   columns,
   searchable = false,
@@ -60,11 +59,7 @@ export function PaginatedDataTable<T extends Record<string, unknown>>({
     to: 0,
   });
 
-  useEffect(() => {
-    loadData();
-  }, [currentPage, perPage, searchQuery]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const result = await fetchData({
@@ -80,7 +75,11 @@ export function PaginatedDataTable<T extends Record<string, unknown>>({
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchData, currentPage, perPage, searchQuery]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -153,7 +152,7 @@ export function PaginatedDataTable<T extends Record<string, unknown>>({
                       <TableCell key={column.key}>
                         {column.render
                           ? column.render(item)
-                          : String(item[column.key] ?? '-')}
+                          : String((item as Record<string, unknown>)[column.key] ?? '-')}
                       </TableCell>
                     ))}
                     {actions && (
