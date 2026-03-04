@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 | All routes are prefixed with /api
 */
 
+Route::get('/health', fn () => response()->json(['status' => 'ok']));
+
 // Public auth routes
 Route::post('/login', [AuthController::class, 'login']);
 

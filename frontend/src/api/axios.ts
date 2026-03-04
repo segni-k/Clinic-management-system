@@ -1,8 +1,20 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const normalizeApiBaseUrl = (rawBase?: string) => {
+  const fallback = 'http://localhost:8000/api';
+
+  if (!rawBase) {
+    return fallback;
+  }
+
+  const trimmedBase = rawBase.trim().replace(/\/+$/, '');
+  return trimmedBase.endsWith('/api') ? trimmedBase : `${trimmedBase}/api`;
+};
+
+const API_BASE = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL);
+
 export const api = axios.create({
-  baseURL: API_BASE || 'http://localhost:8000/api',
+  baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 });
 

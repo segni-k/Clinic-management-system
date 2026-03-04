@@ -5,8 +5,8 @@ services:
     rootDir: backend
     plan: free
     buildCommand: composer install --no-dev --optimize-autoloader
-    startCommand: php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT
-    healthCheckPath: /
+    startCommand: php artisan migrate --force && php artisan db:seed --force && php artisan serve --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
     envVars:
       - key: APP_NAME
         value: Clinic Management System
@@ -26,26 +26,10 @@ services:
 
       - key: DB_CONNECTION
         value: pgsql
-      - key: DB_HOST
-        fromDatabase:
-          name: clinic-management-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: clinic-management-db
-          property: port
-      - key: DB_DATABASE
-        fromDatabase:
-          name: clinic-management-db
-          property: database
-      - key: DB_USERNAME
-        fromDatabase:
-          name: clinic-management-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: clinic-management-db
-          property: password
+      - key: DB_URL
+        sync: false
+      - key: DB_SSLMODE
+        value: require
 
       - key: SESSION_DRIVER
         value: file
@@ -64,9 +48,3 @@ services:
         value: none
       - key: SESSION_SECURE_COOKIE
         value: "true"
-
-databases:
-  - name: clinic-management-db
-    plan: free
-    databaseName: clinic_management
-    user: clinic_management_user
