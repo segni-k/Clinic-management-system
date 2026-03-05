@@ -6,9 +6,10 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     git \
     unzip \
+    libicu-dev \
     libpq-dev \
     libzip-dev \
-  && docker-php-ext-install pdo_pgsql zip \
+  && docker-php-ext-install intl pdo_pgsql zip \
   && a2enmod rewrite headers \
   && rm -rf /var/lib/apt/lists/*
 
