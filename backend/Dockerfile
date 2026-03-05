@@ -16,9 +16,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY backend/ ./
-COPY backend/docker/apache.conf /etc/apache2/sites-available/000-default.conf
-COPY backend/docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY . ./
+COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chmod +x /usr/local/bin/entrypoint.sh \
   && chown -R www-data:www-data storage bootstrap/cache \
