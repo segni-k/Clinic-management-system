@@ -31,8 +31,27 @@ This repo includes a Render Blueprint file at [render.yaml](render.yaml) for the
 - Migrations and seeders run automatically on service start.
 - Runtime uses PHP 8.2+ compatible settings for Laravel 12.
 
+## Docker (production-ready)
+
+A production-ready Dockerfile is available at [backend/Dockerfile](backend/Dockerfile).
+
+Example build and run (uses env vars for DB):
+
+```bash
+docker build -t clinic-backend -f backend/Dockerfile .
+docker run --rm -p 8080:80 \
+  -e APP_ENV=production \
+  -e APP_DEBUG=false \
+  -e APP_URL=http://localhost:8080 \
+  -e DB_CONNECTION=pgsql \
+  -e DB_URL="postgresql://<user>:<password>@<host>/<database>?sslmode=require" \
+  clinic-backend
+```
+
 ## Neon database URL
 
-Set `DB_URL` in Render to:
+Set `DB_URL` in Render to your Neon connection string.
 
-`postgresql://neondb_owner:npg_KnBf0Fk4Qlbh@ep-fancy-mud-ai4429za-pooler.c-4.us-east-1.aws.neon.tech/clinic-management?sslmode=require&channel_binding=require`
+Example (redacted):
+
+`postgresql://<user>:<password>@<host>/<database>?sslmode=require&channel_binding=require`
