@@ -23,7 +23,9 @@ COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chmod +x /usr/local/bin/entrypoint.sh \
   && chown -R www-data:www-data storage bootstrap/cache \
-  && composer install --no-dev --optimize-autoloader
+  && cp .env.example .env \
+  && composer install --no-dev --optimize-autoloader \
+  && rm .env
 
 EXPOSE 80
 
